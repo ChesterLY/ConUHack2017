@@ -1,6 +1,6 @@
 from clarifai.rest import ClarifaiApp
 from clarifai.rest import Image as ClImage
-
+import sys
 
 def RetrieveTags(ResultOfClarifai):
     ListTag = []
@@ -21,11 +21,17 @@ def RetrieveTags(ResultOfClarifai):
     ListTag.pop(0)
     return ListTag
 
+#main - support 1 argument
+#eg. python ClarifaiFood.py "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Schwartz_smoked_meat_montreal.JPG/300px-Schwartz_smoked_meat_montreal.JPG"
+FoodURL = sys.argv[1]
+
 app = ClarifaiApp("Ko672okk_1UH7bhMOwNytXIZh8KZ5E8GoHbzzVxW", "Uu1JVMWQ2hYeB7AwJLuOsyBdbQQix_pnzHBnXOez")
 model = app.models.get('food-items-v1.0')
-image = ClImage(url='https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Schwartz_smoked_meat_montreal.JPG/300px-Schwartz_smoked_meat_montreal.JPG')
+image = ClImage(url=FoodURL)
 myvar = model.predict([image])
 
-returnCode = RetrieveTags(myvar)
-print(str(returnCode))
-print("WORK DONE!!!\n")
+TagList = RetrieveTags(myvar)
+for eachTag in TagList:
+    eachTag = eachTag.rstrip('\',')
+    eachTag = eachTag.lstrip('\'')
+    print(eachTag )
